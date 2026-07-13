@@ -1,466 +1,976 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amulya Bhat - Portfolio</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amulya Bhat — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#101826;
+    --ink:#EDEAE0;
+    --ink-dim:#A6A79E;
+    --line: rgba(237,234,224,0.12);
+    --line-strong: rgba(237,234,224,0.24);
+    --on-accent:#FFFFFF;
+    --track-bg:#1B2536;
+    --brass:#A83E45;
+    --brass-soft: rgba(168,62,69,0.16);
+    --teal:#5B85B8;
+    --teal-soft: rgba(91,133,184,0.16);
+    --accent: var(--brass);
+    --accent-soft: var(--brass-soft);
+    --radius: 2px;
+    --serifgap: 0.02em;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--accent); color:var(--on-accent); }
+
+  h1,h2,h3,h4{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0;
+    color:var(--ink);
+  }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  a{ color:inherit; text-decoration:none; }
+  ul{ margin:0; padding:0; list-style:none; }
+  p{ margin:0; }
+
+  .wrap{
+    max-width:1120px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  /* ---------- Reduced motion ---------- */
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; }
+    html{ scroll-behavior:auto; }
+  }
+
+  /* ---------- NAV ---------- */
+  header.site-nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(16,24,38,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:1120px; margin:0 auto; padding:0 32px;
+    display:flex; align-items:center; justify-content:space-between;
+    height:64px;
+  }
+  .nav-mark{
+    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.05rem;
+    letter-spacing:0.02em; color:var(--ink); display:flex; align-items:center; gap:10px;
+  }
+  .nav-mark .dot{ width:8px; height:8px; border-radius:50%; background:var(--accent); transition:background .4s ease; box-shadow:0 0 0 3px var(--accent-soft); }
+  .nav-links{ display:flex; gap:28px; }
+  .nav-links a{
+    font-family:'IBM Plex Mono',monospace; font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--ink-dim); padding:6px 2px; border-bottom:1px solid transparent; transition:color .25s, border-color .25s;
+  }
+  .nav-links a:hover, .nav-links a.active{ color:var(--accent); border-color:var(--accent); }
+  .nav-toggle-btn{ display:none; background:none; border:1px solid var(--line-strong); color:var(--ink); font-family:'IBM Plex Mono',monospace; font-size:0.85rem; padding:8px 10px; cursor:pointer; }
+
+  @media (max-width:820px){
+    .nav-links{ display:none; }
+    .nav-toggle-btn{ display:inline-block; }
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative; overflow:hidden;
+    padding:168px 0 96px;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-bg{
+    position:absolute; inset:0; z-index:0; opacity:0.55;
+    transition:opacity .6s ease;
+  }
+  .hero-inner{ position:relative; z-index:2; }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:0.78rem; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:22px; display:flex; align-items:center; gap:12px; transition:color .4s ease;
+  }
+  .eyebrow .rule{ width:38px; height:1px; background:var(--accent); transition:background .4s ease; }
+  .hero h1{
+    font-size:clamp(2.6rem, 6vw, 4.6rem); line-height:1.02; max-width:920px; margin-bottom:26px;
+  }
+  .hero h1 em{ color:var(--accent); font-style:normal; transition:color .4s ease; }
+  .hero p.lead{
+    max-width:620px; color:var(--ink-dim); font-size:1.08rem; margin-bottom:40px;
+  }
+  .hero-cta{ display:flex; flex-wrap:wrap; gap:14px; align-items:center; }
+  .btn{
+    font-family:'IBM Plex Mono',monospace; font-size:0.8rem; letter-spacing:0.06em; text-transform:uppercase;
+    padding:14px 22px; border:1px solid var(--line-strong); display:inline-flex; align-items:center; gap:8px;
+    cursor:pointer; background:transparent; color:var(--ink); transition:all .25s ease;
+  }
+  .btn.primary{ background:var(--accent); border-color:var(--accent); color:var(--on-accent); font-weight:600; }
+  .btn.primary:hover{ opacity:0.88; }
+  .btn:not(.primary):hover{ border-color:var(--accent); color:var(--accent); }
+
+  /* --- Signature toggle switch: HW / SW mode --- */
+  .mode-switch-wrap{
+    margin-top:56px; display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+  }
+  .mode-label{
+    font-family:'IBM Plex Mono',monospace; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-dim);
+  }
+  .mode-label.active{ color:var(--ink); }
+  .switch-track{
+    position:relative; width:88px; height:38px; border:1px solid var(--line-strong);
+    background:var(--track-bg); cursor:pointer; padding:3px;
+  }
+  .switch-thumb{
+    position:absolute; top:3px; left:3px; width:32px; height:30px;
+    background:var(--accent); transition: left .35s cubic-bezier(.6,.05,.2,1), background .4s ease;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .switch-thumb svg{ width:16px; height:16px; }
+  .switch-track.sw .switch-thumb{ left:51px; }
+  .switch-caption{ font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:var(--ink-dim); max-width:220px; }
+
+  /* ---------- SECTION shells ---------- */
+  section{ padding:96px 0; border-bottom:1px solid var(--line); position:relative; }
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; gap:24px; margin-bottom:48px; flex-wrap:wrap; }
+  .section-tag{ font-family:'IBM Plex Mono',monospace; font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); transition:color .4s ease; }
+  .section-title{ font-size:clamp(1.7rem,3vw,2.3rem); margin-top:8px; }
+  .section-note{ color:var(--ink-dim); font-size:0.92rem; max-width:340px; }
+
+  .reveal{ opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{ display:grid; grid-template-columns:1.3fr 1fr; gap:64px; }
+  .about-grid p{ color:var(--ink-dim); margin-bottom:18px; font-size:1rem; }
+  .about-grid strong{ color:var(--ink); font-weight:600; }
+  .facts{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border:1px solid var(--line); }
+  .fact{ background:var(--bg); padding:20px 18px; }
+  .fact .num{ font-family:'Space Grotesk',sans-serif; font-size:1.9rem; font-weight:700; color:var(--accent); transition:color .4s ease; }
+  .fact .lbl{ font-family:'IBM Plex Mono',monospace; font-size:0.68rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-dim); margin-top:6px; }
+  @media (max-width:820px){ .about-grid{ grid-template-columns:1fr; gap:36px; } }
+
+  /* ---------- TIMELINE (education + experience) ---------- */
+  .tabs{ display:flex; gap:8px; margin-bottom:40px; }
+  .tab-btn{
+    font-family:'IBM Plex Mono',monospace; font-size:0.74rem; letter-spacing:0.06em; text-transform:uppercase;
+    padding:10px 16px; border:1px solid var(--line-strong); background:transparent; color:var(--ink-dim); cursor:pointer; transition:all .2s ease;
+  }
+  .tab-btn.active{ color:var(--on-accent); background:var(--accent); border-color:var(--accent); }
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; }
+
+  .timeline{ position:relative; padding-left:28px; }
+  .timeline::before{ content:''; position:absolute; left:5px; top:6px; bottom:6px; width:1px; background:var(--line-strong); }
+  .t-item{ position:relative; padding-bottom:44px; }
+  .t-item:last-child{ padding-bottom:0; }
+  .t-item::before{ content:''; position:absolute; left:-28px; top:4px; width:11px; height:11px; border-radius:50%; background:var(--bg); border:2px solid var(--accent); transition:border-color .4s ease; }
+  .t-head{ display:flex; justify-content:space-between; align-items:baseline; gap:16px; flex-wrap:wrap; margin-bottom:6px; cursor:pointer; }
+  .t-org{ font-size:1.1rem; font-weight:600; color:var(--ink); }
+  .t-role{ color:var(--accent); font-family:'IBM Plex Mono',monospace; font-size:0.82rem; transition:color .4s ease; }
+  .t-date{ font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:var(--ink-dim); white-space:nowrap; }
+  .t-body{ max-height:0; overflow:hidden; transition:max-height .4s ease; }
+  .t-body.open{ max-height:900px; }
+  .t-body ul{ padding-top:10px; }
+  .t-body li{ position:relative; padding-left:16px; margin-bottom:10px; color:var(--ink-dim); font-size:0.94rem; }
+  .t-body li::before{ content:'—'; position:absolute; left:0; color:var(--accent); }
+  .t-chev{ font-family:'IBM Plex Mono',monospace; color:var(--ink-dim); transition:transform .3s ease; }
+  .t-head.open .t-chev{ transform:rotate(90deg); color:var(--accent); }
+
+  /* ---------- SKILLS ---------- */
+  .skill-groups{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+  .skill-card{ background:var(--bg); padding:26px 24px; }
+  .skill-card h4{ font-size:0.95rem; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+  .skill-card h4::before{ content:attr(data-mark); font-family:'IBM Plex Mono',monospace; color:var(--accent); font-size:0.72rem; transition:color .4s ease; }
+  .chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{
+    font-family:'IBM Plex Mono',monospace; font-size:0.72rem; padding:6px 10px; border:1px solid var(--line-strong);
+    color:var(--ink-dim); transition:all .25s ease; cursor:default;
+  }
+  .chip:hover{ border-color:var(--accent); color:var(--accent); }
+  .chip.priority{ border-color:var(--accent); color:var(--accent); background:var(--accent-soft); }
+  @media (max-width:900px){ .skill-groups{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:600px){ .skill-groups{ grid-template-columns:1fr; } }
+
+  /* ---------- PROJECTS ---------- */
+  .filter-row{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:40px; }
+  .filter-btn{
+    font-family:'IBM Plex Mono',monospace; font-size:0.72rem; letter-spacing:0.05em; text-transform:uppercase;
+    padding:9px 15px; border:1px solid var(--line-strong); background:transparent; color:var(--ink-dim); cursor:pointer; transition:all .2s ease;
+  }
+  .filter-btn.active{ background:var(--accent); border-color:var(--accent); color:var(--on-accent); }
+  .filter-btn:hover:not(.active){ border-color:var(--accent); color:var(--accent); }
+
+  .proj-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+  .proj-card{ background:var(--bg); padding:30px 28px; display:flex; flex-direction:column; gap:14px; transition:opacity .3s ease, transform .3s ease; }
+  .proj-card.hide{ display:none; }
+  .proj-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+  .proj-title{ font-size:1.12rem; font-weight:600; color:var(--ink); }
+  .proj-year{ font-family:'IBM Plex Mono',monospace; font-size:0.7rem; color:var(--ink-dim); white-space:nowrap; }
+  .proj-stack{ font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:var(--accent); transition:color .4s ease; }
+  .proj-desc{ color:var(--ink-dim); font-size:0.9rem; }
+  .proj-desc ul li{ position:relative; padding-left:14px; margin-bottom:8px; }
+  .proj-desc ul li::before{ content:'·'; position:absolute; left:0; color:var(--accent); font-weight:700; }
+  .proj-tags{ display:flex; flex-wrap:wrap; gap:6px; margin-top:auto; padding-top:10px; }
+  .proj-tags span{ font-family:'IBM Plex Mono',monospace; font-size:0.65rem; padding:3px 8px; border:1px solid var(--line-strong); color:var(--ink-dim); }
+  @media (max-width:820px){ .proj-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- CERTIFICATIONS accordion ---------- */
+  .accordion-item{ border-bottom:1px solid var(--line); }
+  .accordion-item:first-child{ border-top:1px solid var(--line); }
+  .acc-head{ padding:22px 0; display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
+  .acc-head h4{ font-size:1rem; }
+  .acc-count{ font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:var(--ink-dim); }
+  .acc-chev{ font-family:'IBM Plex Mono',monospace; color:var(--accent); transition:transform .3s ease; margin-left:14px; }
+  .acc-head.open .acc-chev{ transform:rotate(45deg); }
+  .acc-body{ max-height:0; overflow:hidden; transition:max-height .4s ease; }
+  .acc-body.open{ max-height:600px; padding-bottom:24px; }
+  .cert-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px 32px; }
+  .cert-grid li{ font-size:0.88rem; color:var(--ink-dim); padding:6px 0; border-bottom:1px dashed var(--line); }
+  .cert-grid li b{ color:var(--ink); font-weight:500; }
+  @media (max-width:700px){ .cert-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- LEADERSHIP + ACHIEVEMENTS ---------- */
+  .lead-grid{ display:grid; grid-template-columns:1fr 1fr; gap:64px; }
+  .lead-card{ margin-bottom:32px; }
+  .lead-card:last-child{ margin-bottom:0; }
+  .lead-card .t-org{ font-size:1.02rem; }
+  .lead-card .t-role{ display:block; margin:4px 0 10px; }
+  .lead-card p{ color:var(--ink-dim); font-size:0.9rem; }
+  .achv-list li{ display:flex; gap:14px; padding:14px 0; border-bottom:1px solid var(--line); }
+  .achv-list li:last-child{ border-bottom:none; }
+  .achv-mark{ font-family:'IBM Plex Mono',monospace; color:var(--accent); font-size:0.8rem; transition:color .4s ease; }
+  .achv-list p{ color:var(--ink-dim); font-size:0.9rem; }
+  .achv-list b{ color:var(--ink); font-weight:600; }
+  @media (max-width:820px){ .lead-grid{ grid-template-columns:1fr; gap:36px; } }
+
+  /* ---------- CONTACT / FOOTER ---------- */
+  footer{ padding:96px 0 56px; }
+  .contact-grid{ display:flex; justify-content:space-between; align-items:flex-end; gap:40px; flex-wrap:wrap; }
+  footer h2{ font-size:clamp(1.9rem,4vw,3rem); max-width:560px; }
+  .contact-links{ display:flex; flex-direction:column; gap:10px; align-items:flex-start; }
+  .contact-links a{ font-family:'IBM Plex Mono',monospace; font-size:0.85rem; color:var(--ink-dim); border-bottom:1px solid transparent; padding-bottom:2px; transition:all .2s ease; }
+  .contact-links a:hover{ color:var(--accent); border-color:var(--accent); }
+  .lang-row{ display:flex; gap:22px; margin-top:36px; flex-wrap:wrap; }
+  .lang-row span{ font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:var(--ink-dim); }
+  .lang-row b{ color:var(--ink); }
+  .copyright{ margin-top:64px; padding-top:24px; border-top:1px solid var(--line); display:flex; justify-content:space-between; color:var(--ink-dim); font-family:'IBM Plex Mono',monospace; font-size:0.7rem; flex-wrap:wrap; gap:10px; }
+
+  .toast{
+    position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--accent); color:var(--on-accent); font-family:'IBM Plex Mono',monospace; font-size:0.78rem;
+    padding:12px 20px; opacity:0; pointer-events:none; transition:all .3s ease; z-index:200;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+</style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="nav">
-        <div class="container">
-            <div class="nav__content">
-                <a href="#hero" class="nav__logo">Amulya Bhat</a>
-                <div class="nav__menu">
-                    <a href="#about" class="nav__link">About</a>
-                    <a href="#education" class="nav__link">Education</a>
-                    <a href="#experience" class="nav__link">Experience</a>
-                    <a href="#certifications" class="nav__link">Certifications</a>
-                    <a href="#projects" class="nav__link">Projects</a>
-                    <a href="#skills" class="nav__link">Skills</a>
-                    <a href="#contact" class="nav__link">Contact</a>
-                    <button class="theme-toggle" id="theme-toggle">
-                        <span class="theme-toggle__icon">🌙</span>
-                    </button>
-                </div>
-            </div>
-        </div>
+
+<!-- ================= NAV ================= -->
+<header class="site-nav">
+  <div class="nav-inner">
+    <div class="nav-mark"><span class="dot"></span>AMULYA BHAT</div>
+    <nav class="nav-links">
+      <a href="#about">About</a>
+      <a href="#journey">Journey</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#certifications">Certs</a>
+      <a href="#leadership">Leadership</a>
+      <a href="#contact">Contact</a>
     </nav>
+  </div>
+</header>
 
-    <!-- Hero Section -->
-    <section id="hero" class="hero">
-        <div class="hero__background"></div>
-        <div class="hero__particles"></div>
-        <div class="container">
-            <div class="hero__content">
-                <h1 class="hero__title">Amulya Bhat</h1>
-                <p class="hero__subtitle">Electronics & Data Science Student</p>
-                <p class="hero__description">Pursuing B.Tech in ECE at VIT and BS in Data Science at IIT Madras. Skilled in MATLAB, Embedded systems projects, and international collaboration through scouting.</p>
-                <div class="hero__actions">
-                    <a href="#projects" class="btn btn--primary">View Projects</a>
-                    <a href="#contact" class="btn btn--outline">Get in Touch</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Me Section -->
-    <section id="about" class="about">
-        <div class="container">
-            <h2 class="section__title">About Me</h2>
-            <div class="about__content">
-                <div class="about__image">
-                    <div class="about__photo"></div>
-                </div>
-                <div class="about__text">
-                    <p>I am an enthusiastic and driven engineering student currently pursuing dual degrees—Electronics and Communication Engineering at VIT Vellore and Data Science and Applications at IIT Madras. I have a strong passion for the field of electronics and communications, with a keen interest in integrating technical proficiency with creative expression to contribute meaningfully to the evolving landscape of technology.</p>
-                    
-                    <div class="about__highlights">
-                        <h3>Key Achievements</h3>
-                        <ul>
-                            <li>10 GPA in first term at IIT Madras Data Science program</li>
-                            <li>Represented India at 25th World Scout Jamboree</li>
-                            <li>Content Head for international e-newsletter during pandemic</li>
-                            <li>Experience with defense electronics at Bharat Electronics Limited</li>
-                            <li>Standing strong at 9.42 gpa at VIT Vellore</li>
-                        </ul>
-                    </div>
-                    
-                    <p>As a scout at the World Organization of the Scout Movement (WOSM), I have developed strong leadership skills and international perspective. My experience ranges from managing editorial content during the pandemic to representing India at international events.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Education Section -->
-    <section id="education" class="education">
-        <div class="container">
-            <h2 class="section__title">Education</h2>
-            <div class="education__grid">
-                <div class="education__card">
-                    <div class="education__header">
-                        <h3 class="education__institution">Vellore Institute of Technology</h3>
-                        <span class="education__period">2023–2027</span>
-                    </div>
-                    <div class="education__content">
-                        <h4 class="education__degree">B.Tech, Electronics & Communication Engineering</h4>
-                        <p class="education__location">Vellore, Tamil Nadu</p>
-                        <ul class="education__details">
-                            <li>Core focus: Electronics, Communication Systems</li>
-                            <li>Tools: Multisim, ModelSim, LTspice, Quartus prime, MATLAB</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="education__card">
-                    <div class="education__header">
-                        <h3 class="education__institution">IIT Madras</h3>
-                        <span class="education__period">2024–Present</span>
-                    </div>
-                    <div class="education__content">
-                        <h4 class="education__degree">BS, Data Science & Applications</h4>
-                        <p class="education__location">Chennai, Tamil Nadu</p>
-                        <ul class="education__details">
-                            <li>10 GPA in first term, Foundation Level completed</li>
-                            <li>Skills: Python, Statistics, Data Science, Mathematics, Java, DBMS</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="education__card">
-                    <div class="education__header">
-                        <h3 class="education__institution">Sadhana PU & Degree College</h3>
-                        <span class="education__period">2021–2023</span>
-                    </div>
-                    <div class="education__content">
-                        <h4 class="education__degree">Science PCMC (11th & 12th)</h4>
-                        <p class="education__location">Karnataka, India</p>
-                        <ul class="education__details">
-                            <li>Star of the Year (2022–2023)</li>
-                            <li>Skills: C++, HTML, SQL</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Experience Section -->
-    <section id="experience" class="experience">
-        <div class="container">
-            <h2 class="section__title">Experience</h2>
-            <div class="experience__timeline">
-                <div class="experience__item">
-                    <div class="experience__marker"></div>
-                    <div class="experience__content">
-                        <div class="experience__header">
-                            <h3 class="experience__title">Summer Intern</h3>
-                            <p class="experience__company">Bharat Electronics Limited (BEL)</p>
-                            <span class="experience__period">Jun 2025 - Jul 2025</span>
-                            <span class="experience__location">Bengaluru, Karnataka</span>
-                        </div>
-                        <p class="experience__description">Completed internship in Naval division working on electronics projects, gaining hands-on experience in defense electronics systems.</p>
-                    </div>
-                </div>
-                
-                <div class="experience__item">
-                    <div class="experience__marker"></div>
-                    <div class="experience__content">
-                        <div class="experience__header">
-                            <h3 class="experience__title">Content Strategist and Researcher</h3>
-                            <p class="experience__company">Aptifyr</p>
-                            <span class="experience__period">Apr 2025 - May 2025</span>
-                            <span class="experience__location">Vellore, Tamil Nadu</span>
-                        </div>
-                        <p class="experience__description">Ed-tech company helping schools deliver essential skills. Worked on content strategy and research for educational programs.</p>
-                    </div>
-                </div>
-                
-                <div class="experience__item">
-                    <div class="experience__marker"></div>
-                    <div class="experience__content">
-                        <div class="experience__header">
-                            <h3 class="experience__title">Management Team Member</h3>
-                            <p class="experience__company">Team Assailing Falcons</p>
-                            <span class="experience__period">Apr 2024 - Jan 2025</span>
-                            <span class="experience__location">Vellore, Tamil Nadu</span>
-                        </div>
-                        <p class="experience__description">SAE-affiliated Advanced Class Aero Design team. Handled management including sponsorships, outreach, designing and animation.</p>
-                    </div>
-                </div>
-                
-                <div class="experience__item">
-                    <div class="experience__marker"></div>
-                    <div class="experience__content">
-                        <div class="experience__header">
-                            <h3 class="experience__title">Summer Intern</h3>
-                            <p class="experience__company">Bosch Rexroth</p>
-                            <span class="experience__period">Jun 2024 - Jul 2024</span>
-                            <span class="experience__location">Bengaluru, Karnataka</span>
-                        </div>
-                        <p class="experience__description">Exposure to PLC programming, manufacturing processes, and industrial automation in a leading technology company.</p>
-                    </div>
-                </div>
-
-		<div class="experience__item">
-                    <div class="experience__marker"></div>
-                    <div class="experience__content">
-                        <div class="experience__header">
-                            <h3 class="experience__title">Contingent Management Team member</h3>
-                            <p class="experience__company">World Scout Jamboree 2025</p>
-                            <span class="experience__period">July 2023-August 2023</span>
-                            <span class="experience__location">SaeManGeum, South Korea</span>
-                        </div>
-                        <p class="experience__description">Represented India as part of the Contingent Management Team (CMT) at the 25th World Scout Jamboree in SaeManGeum, South Korea, I contributed to the Media Team, where I showcased my skills in content creation and storytelling.</p>
-                    </div>
-                </div>
-
-		<div class="experience__item">
-                    <div class="experience__marker"></div>
-                    <div class="experience__content">
-                        <div class="experience__header">
-                            <h3 class="experience__title">Content Head and Editor</h3>
-                            <p class="experience__company">Scounting Waves</p>
-                            <span class="experience__period">Jun 2020 - Jul 2022</span>
-                            <span class="experience__location">Remote</span>
-                        </div>
-                        <p class="experience__description">Served as News Content Head and Editor for Scouting Waves, an e-newspaper by The Bharat Scouts and Guides launched during the pandemic to connect and update Scouts globally.</p>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-<!-- Certifications Section -->
-<section id="certifications" class="certifications">
-    <div class="container">
-        <h2 class="section__title">Certifications</h2>
-        <div class="certifications__list">
-            	<div class="certification__item">Embedded Programming for Sensor Systems (VAC at VIT Vellore)</div>
-		<div class="certification__item">Elctromagnetic Interference and Compatibility (VAC at VIT Vellore)</div>
-            	<div class="certification__item">PLC Programming - Learn the Basics with CoDeSys (Udemy)</div>
-            	<div class="certification__item">Basic MATLAB Programming (Udemy)</div>
-           	<div class="certification__item">One month course on Quantum Computing (Centre for development of Advanced Computing)</div>
-		<div class="certification__item">VLSI System on a chip (Maven Silicon)</div>
-		<div class="certification__item">Introductory Drone workshop (India Space Labs)</div>
-		<div class="certification__item">28th International Symposium of VLSI Design And Test (VDAT) 2024</div>
-        </div>
-        <button class="certifications__viewmore-btn" onclick="document.getElementById('certifications__more').style.display='block';this.style.display='none';">
-            View More
-        </button>
-        <div id="certifications__more" class="certifications__more" style="display:none;">
-            	<div class="certification__item">Introduction to Data Science (CISCO)</div>
-            	<div class="certification__item">AI Beginners (HP life)</div>
-		<div class="certification__item">Python Essentials (CISCO)</div>
-		<div class="certification__item">Introduction to Cybersecurity (CISCO)</div>
-		<div class="certification__item">Verilog HDL-Hands on(Maven Silicon)</div>
-		<div class="certification__item">Physical Design foundation(Maven Silicon)</div>
-		<div class="certification__item">Embedded System Design Overview(Maven Silicon)</div>
-		<div class="certification__item">30 days Power BI micro course</div>
-		<div class="certification__item">Introduction to Microsoft Excel (Coursera)</div>
-		<div class="certification__item">PostgreSQL (Simplilearn)</div>
-		<div class="certification__item">Introduction to Figma along with prototyping (Simplilearn)</div>
-		<div class="certification__item">Customer Experience (HP Life)</div>
-		<div class="certification__item">Get started with Figma (Coursera)</div>
-        </div>
+<!-- ================= HERO ================= -->
+<section class="hero" style="border-bottom:1px solid var(--line);">
+  <svg class="hero-bg" id="heroBg" viewBox="0 0 1120 520" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"></svg>
+  <div class="wrap hero-inner">
+    <div class="eyebrow"><span class="rule"></span> ELECTRONICS &amp; SOFTWARE ENGINEER</div>
+    <h1>Building at the point where <em>circuits</em> meet <em>code.</em></h1>
+    <p class="lead">Amulya Bhat — B.Tech Electronics &amp; Communication Engineering, VIT Vellore (CGPA 9.42/10), with a dual BS in Data Science &amp; Applications from IIT Madras. Twelve-plus projects spanning VLSI, embedded firmware, wireless systems, and full-stack AI applications, backed by internships and research at Bharat Electronics Limited, Bosch Rexroth, and the AIMS Lab at the University of Central Florida.</p>
+    <div class="hero-cta">
+      <a class="btn primary" href="#projects">View projects</a>
+      <a class="btn" href="#contact">Get in touch</a>
+      <a class="btn" href="Amulya_Bhat_Electronics_Resume.docx" download>Download Electronics Resume ↓</a>
+      <a class="btn" href="Amulya_Bhat_IT_Software_Resume.docx" download>Download Software Resume ↓</a>
     </div>
+
+    <div class="mode-switch-wrap">
+      <span class="mode-label" id="lblHW">HARDWARE</span>
+      <div class="switch-track" id="modeSwitch" role="button" tabindex="0" aria-label="Toggle between hardware and software focus">
+        <div class="switch-thumb" id="switchThumb">
+          <svg id="thumbIcon" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2"><path d="M9 3v4M15 3v4M9 17v4M15 17v4M3 9h4M3 15h4M17 9h4M17 15h4"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+        </div>
+      </div>
+      <span class="mode-label" id="lblSW">SOFTWARE</span>
+      <span class="switch-caption" id="switchCaption">Toggling re-sorts skills &amp; recolors the page to match each discipline — because the work genuinely lives in both.</span>
+    </div>
+  </div>
 </section>
-    <!-- Projects Section -->
-    <section id="projects" class="projects">
-        <div class="container">
-            <h2 class="section__title">Projects</h2>
-            <div class="projects__grid">
-                <div class="project__card">
-                    <div class="project__header">
-                        <h3 class="project__title">Static Timing Analysis (STA) Engine</h3>
-                        <span class="project__tag">Technical</span>
-                    </div>
-                    <div class="project__content">
-                        <p>Complete STA engine built in MATLAB for circuit timing analysis with advanced algorithms for performance optimization.</p>
-                        <div class="project__tech">
-                            <span class="tech__tag">MATLAB</span>
-                            <span class="tech__tag">Circuit Analysis</span>
-                            <span class="tech__tag">Timing Analysis</span>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="project__card">
-                    <div class="project__header">
-                        <h3 class="project__title">Hand Gesture controlled robotic vehicle</h3>
-                        <span class="project__tag">Technical</span>
-                    </div>
-                    <div class="project__content">
-                        <p>A gesture-based robotic vehicle built using dual ESP32 microcontrollers and an accelerometer for intuitive motion control.</p>
-                        <div class="project__tech">
-			    <span class="tech__tag">Embedded systems</span>
-                            <span class="tech__tag">Sensor technology</span>
-                            <span class="tech__tag">Arduino IDE</span>
-                            <span class="tech__tag">Embedded C coding</span>
-                        </div>
-                    </div>
-                </div>
+<!-- ================= ABOUT ================= -->
+<section id="about">
+  <div class="wrap reveal">
+    <div class="section-head">
+      <div>
+        <div class="section-tag">// 01 — Profile</div>
+        <h2 class="section-title">About</h2>
+      </div>
+      <p class="section-note">A rare combination: comfortable in Cadence Virtuoso and a Flask backend in the same week.</p>
+    </div>
+    <div class="about-grid">
+      <div>
+        <p>Amulya is a results-driven engineer pursuing a <strong>B.Tech in Electronics &amp; Communication Engineering at VIT Vellore</strong> alongside a dual <strong>BS in Data Science &amp; Applications from IIT Madras</strong> — a combination built to produce engineers who are equally fluent in algorithmic thinking and physical systems.</p>
+        <p>Industry exposure spans <strong>VLSI design, embedded systems, RF/antenna simulation, and IoT</strong> through internships at Bharat Electronics Limited (Naval Systems SBU) and Bosch Rexroth, plus an exchange semester at the <strong>University of Central Florida</strong>. On the software side, that same rigor shows up as <strong>full-stack development, REST APIs, and applied NLP/ML</strong> — proficient in Python, Java, C++, JavaScript, and SQL, with hands-on delivery across Flask, Bootstrap, and SQL databases.</p>
+        <p>The throughline across a portfolio of 12+ end-to-end builds is <strong>hardware-software co-design</strong>: RTL and FPGA work sitting next to autonomous robotics, LoRa wireless links, and cloud-connected dashboards.</p>
+      </div>
+      <div class="facts">
+        <div class="fact"><div class="num">9.42</div><div class="lbl">CGPA / 10.00, VIT Vellore</div></div>
+        <div class="fact"><div class="num">2</div><div class="lbl">Concurrent degrees (ECE + Data Science)</div></div>
+        <div class="fact"><div class="num">12+</div><div class="lbl">End-to-end engineering projects</div></div>
+        <div class="fact"><div class="num">3</div><div class="lbl">Core industry internships</div></div>
+        <div class="fact"><div class="num">97.29</div><div class="lbl">JEE Mains percentile</div></div>
+        <div class="fact"><div class="num">1</div><div class="lbl">Exchange semester, UCF Florida</div></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-		<div class="project__card">
-                    <div class="project__header">
-                        <h3 class="project__title">Home automation</h3>
-                        <span class="project__tag">Technical</span>
-                    </div>
-                    <div class="project__content">
-                        <p>Designed and developed a smart home automation system using the Arduino Uno and HC-05 Bluetooth module, enabling wireless control of appliances such as lights via an Android app.</p>
-                        <div class="project__tech">
-			    <span class="tech__tag">Embedded systems</span>
-                            <span class="tech__tag">Sensor technology</span>
-                            <span class="tech__tag">Arduino IDE</span>
-                            <span class="tech__tag">Embedded C coding</span>
-                        </div>
-                    </div>
-                </div>
+<!-- ================= JOURNEY: Education + Experience ================= -->
+<section id="journey">
+  <div class="wrap reveal">
+    <div class="section-head">
+      <div>
+        <div class="section-tag">// 02 — Journey</div>
+        <h2 class="section-title">Education &amp; Experience</h2>
+      </div>
+      <p class="section-note">Click any entry to expand the detail.</p>
+    </div>
 
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="edu">Education</button>
+      <button class="tab-btn" data-tab="exp">Experience</button>
+    </div>
 
-                <div class="project__card">
-                    <div class="project__header">
-                        <h3 class="project__title">Obstacle Avoidance Robot</h3>
-                        <span class="project__tag">Technical</span>
-                    </div>
-                    <div class="project__content">
-                        <p>The design and implementation of a small-scale autonomous robot capable of detecting and avoiding obstacles using an HC-SR04 ultrasonic sensor and an Arduino microcontroller.</p>
-                        <div class="project__tech">
-                            <span class="tech__tag">Sensor technology</span>
-                            <span class="tech__tag">Arduino IDE</span>
-                            <span class="tech__tag">Embedded C coding</span>
-                        </div>
-                    </div>
-                </div>
+    <div class="tab-panel active" id="edu">
+      <div class="timeline">
 
-				<div class="project__card">
-                    <div class="project__header">
-                        <h3 class="project__title">Spotify Music Trends Analysis using Pythont</h3>
-                        <span class="project__tag">Technical</span>
-                    </div>
-                    <div class="project__content">
-                        <p>Analyzed the Spotify Tracks Dataset using Python to clean and explore song features like energy, danceability, and popularity. Used Pandas for data handling, Seaborn and Matplotlib to visualize music trends over time, with OS for file management.</p>
-                        <div class="project__tech">
-                            <span class="tech__tag">Pandas</span>
-                            <span class="tech__tag">Seaborn</span>
-                            <span class="tech__tag">Matplotlib</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="project__card">
-                    <div class="project__header">
-                        <h3 class="project__title">Light and Darkness Detector</h3>
-                        <span class="project__tag">Technical</span>
-                    </div>
-                    <div class="project__content">
-                        <p>This simple circuit uses an LDR (Light Dependent Resistor) and a 555 timer IC to detect light and darkness efficiently.</p>
-                        <div class="project__tech">
-                            <span class="tech__tag">555 timer</span>
-                            <span class="tech__tag">Analog circuits</span>
-                            <span class="tech__tag">Flip Flop logic</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="t-item">
+          <div class="t-head"><div><div class="t-org">Vellore Institute of Technology (VIT), Vellore</div><div class="t-role">B.Tech — Electronics &amp; Communication Engineering</div></div><div style="display:flex;align-items:center;gap:12px;"><div class="t-date">2023 – 2027</div><span class="t-chev">›</span></div></div>
+          <div class="t-body"><ul><li>CGPA: 9.42 / 10.00, maintained across a rigorous ECE curriculum alongside a full slate of extracurricular and internship commitments.</li></ul></div>
         </div>
-    </section>
-	
 
-    <!-- Skills Section -->
-    <section id="skills" class="skills">
-        <div class="container">
-            <h2 class="section__title">Skills</h2>
-            <div class="skills__grid">
-                <div class="skills__category">
-                    <h3 class="skills__category-title">Technical</h3>
-                    <div class="skills__list">
-                        <span class="skill__badge">Verilog</span>
-                        <span class="skill__badge">Cadence</span>
-						<span class="skill__badge">TCad</span>
-						<span class="skill__badge">RARS</span>
-                        <span class="skill__badge">MATLAB</span>
-                        <span class="skill__badge">Python</span>
-                        <span class="skill__badge">C++</span>
-                        <span class="skill__badge">Machine Learning</span>
-                        <span class="skill__badge">PLC Programming</span>
-                        <span class="skill__badge">Circuit Design</span>
-                        <span class="skill__badge">DBMS</span>
-                        <span class="skill__badge">PCB designing software(KiCad)</span>
-                        <span class="skill__badge">HTML</span>
-						<span class="skill__badge">Pandas</span>
-						<span class="skill__badge">Seaborn</span>
-						<span class="skill__badge">Matplotlib</span>
-                    </div>
-                </div>
-                
-                <div class="skills__category">
-                    <h3 class="skills__category-title">Content</h3>
-                    <div class="skills__list">
-                        <span class="skill__badge">Content Writing</span>
-                        <span class="skill__badge">Editing</span>
-                        <span class="skill__badge">E-newsletter Creation</span>
-                        <span class="skill__badge">Content Strategy</span>
-                        <span class="skill__badge">Graphic Designing</span>
-                        <span class="skill__badge">3D animation</span>
-                        <span class="skill__badge">Social Media management</span>
-                    </div>
-                </div>
-                
-                <div class="skills__category">
-                    <h3 class="skills__category-title">Leadership</h3>
-                    <div class="skills__list">
-                        <span class="skill__badge">Project Management</span>
-                        <span class="skill__badge">Team Leadership</span>
-                        <span class="skill__badge">Event Management</span>
-                        <span class="skill__badge">Public Speaking</span>
-                        <span class="skill__badge">Cross-cultural Communication</span>
-                    </div>
-                </div>
-                
-                <div class="skills__category">
-                    <h3 class="skills__category-title">Tools & Technologies</h3>
-                    <div class="skills__list">
-                        <span class="skill__badge">Figma</span>
-                        <span class="skill__badge">Blender</span>
-                        <span class="skill__badge">Adobe Premiere Pro</span>
-                        <span class="skill__badge">Multisim</span>
-                        <span class="skill__badge">ModelSim</span>
-                        <span class="skill__badge">LTspice</span>
-                        <span class="skill__badge">Intel Quartus prime</span>
-                        <span class="skill__badge">Node RED</span>
-                        <span class="skill__badge">CoDeSys</span>
-                        <span class="skill__badge">KiCad</span>
-                        <span class="skill__badge">Factory IO</span>
-                        <span class="skill__badge">Indra works engineering</span>
-                        <span class="skill__badge">Mosquitto</span>
-                    </div>
-                </div>
-            </div>
+        <div class="t-item">
+          <div class="t-head"><div><div class="t-org">Indian Institute of Technology (IIT), Madras</div><div class="t-role">BS — Data Science &amp; Applications (Online, Dual Degree)</div></div><div style="display:flex;align-items:center;gap:12px;"><div class="t-date">2024 – Present</div><span class="t-chev">›</span></div></div>
+          <div class="t-body"><ul><li>Ongoing dual degree covering Python, statistics, machine learning, DBMS, and data structures — run concurrently with the on-campus ECE program.</li></ul></div>
         </div>
-    </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <h2 class="section__title">Get in Touch</h2>
-            <div class="contact__content">
-                <div class="contact__info">
-                    <h3>Let's Connect</h3>
-                    <p>I'm always open to discussing new opportunities, collaborations, or just having a conversation about technology and content creation.</p>
-                    <div class="contact__details">
-                        <div class="contact__item">
-                            <span class="contact__label">Email</span>
-                            <span class="contact__value">amulya1471@gmail.com</span>
-                        </div>
-                        <div class="contact__item">
-                            <span class="contact__label">Location</span>
-                            <span class="contact__value">Bengaluru, Karnataka, India</span>
-                        </div>
-                    </div>
-                    <div class="contact__social">
-                        <h4>Find me on</h4>
-                        <div class="social__links">
-                            <a href="https://linkedin.com/in/amulya-bhat-1151a228b" target="_blank" class="social__link">LinkedIn</a>
-                            <a href=https://github.com/Amulyabhat2023/ target="_blank" class="social__link">GitHub</a>
-                        </div>
-                    </div>
-                </div>
-             </div>
+        <div class="t-item">
+          <div class="t-head"><div><div class="t-org">University of Central Florida (UCF), Orlando</div><div class="t-role">Exchange Semester — Electronics Engineering</div></div><div style="display:flex;align-items:center;gap:12px;"><div class="t-date">Spring 2026</div><span class="t-chev">›</span></div></div>
+          <div class="t-body"><ul><li>Selected for international academic exchange, gaining direct exposure to US university research culture and the broader industry ecosystem.</li></ul></div>
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer__content">
-                <p>&copy; 2025 Amulya Bhat. All rights reserved.</p>
-                <p>Built with passion for technology and content creation.</p>
-            </div>
+        <div class="t-item">
+          <div class="t-head"><div><div class="t-org">Sadhana Pre-University College, Bengaluru</div><div class="t-role">Class XII — Science (PCMC)</div></div><div style="display:flex;align-items:center;gap:12px;"><div class="t-date">2021 – 2023</div><span class="t-chev">›</span></div></div>
+          <div class="t-body"><ul><li>Board score: 96.8%. JEE Mains: 97.29 percentile. Cleared JEE Advanced, placing in the top ~2% of 1.2M+ candidates nationwide.</li></ul></div>
         </div>
-    </footer>
 
-    <script src="app.js"></script>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="exp">
+      <div class="timeline">
+
+        <div class="t-item">
+          <div class="t-head"><div><div class="t-org">AIMS Lab, University of Central Florida</div><div class="t-role">Research Assistant (Semester Abroad) · Orlando, USA</div></div><div style="display:flex;align-items:center;gap:12px;"><div class="t-date">Jan – May 2026</div><span class="t-chev">›</span></div></div>
+          <div class="t-body"><ul>
+            <li>Designed and simulated high-frequency RF components, focusing on resonator design and coplanar waveguides to optimize signal integrity and minimize transmission loss.</li>
+            <li>Completed comprehensive semiconductor cleanroom safety certifications, mastering laboratory protocols, chemical handling guidelines, and microelectronics safety standards.</li>
+            <li>Analysed advanced microfabrication workflows — including physical vapor deposition (sputtering) and optical imaging — to evaluate multi-step device fabrication and quality control processes.</li>
+            <li>Executed end-to-end walkthroughs of cleanroom environments, gaining practical insights into substrate preparation, thin-film deposition, and lithographic inspection techniques.</li>
+          </ul></div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-head"><div><div class="t-org">OneYes Infotech Solutions Pvt. Ltd</div><div class="t-role">Web Developer Intern · Chennai, Tamil Nadu (Remote)</div></div><div style="display:flex;align-items:center;gap:12px;"><div class="t-date">Apr – May 2026</div><span class="t-chev">›</span></div></div>
+          <div class="t-body"><ul>
+            <li>Designed and prototyped the UI/UX of an AI Resume Builder app in Figma, translating user requirements into interactive workflows.</li>
+            <li>Developed backend logic and integrated MongoDB databases, ensuring secure data management and seamless frontend–backend connectivity.</li>
+            <li>Executed testing, debugging, and deployment, gaining end-to-end exposure to full-stack development practices in a real-world project.</li>
+          </ul></div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-head"><div><div class="t-org">Bharat Electronics Limited (BEL) — Naval Systems SBU</div><div class="t-role">Industrial Engineering Intern · Bengaluru</div></div><div style="display:flex;align-items:center;gap:12px;"><div class="t-date">Jun – Jul 2025</div><span class="t-chev">›</span></div></div>
+          <div class="t-body"><ul>
+            <li>Gained in-depth exposure to sonar signal processing, naval communication systems, and defense-grade electronics for mission-critical underwater applications used by the Indian Navy.</li>
+            <li>Studied integration, functional testing, software validation, and production workflows for complex electronic sub-systems operating under stringent defense EMI/EMC standards.</li>
+            <li>Analysed system-level architecture of sonar transducer arrays and underwater acoustic signal chains, and the communication protocols and software interfaces linking them.</li>
+            <li>Observed quality assurance protocols and reliability testing methodologies, reinforcing knowledge of Design for Testability (DFT) and MIL-standard compliance.</li>
+            <li>Prepared technical documentation summarising design, testing, and system architecture observations for a professional defense engineering environment.</li>
+          </ul></div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-head"><div><div class="t-org">Bosch Rexroth</div><div class="t-role">Industrial Intern — Automation &amp; Software Integration · Bengaluru</div></div><div style="display:flex;align-items:center;gap:12px;"><div class="t-date">Jun – Jul 2024</div><span class="t-chev">›</span></div></div>
+          <div class="t-body"><ul>
+            <li>Developed and debugged PLC programs in Structured Text, Ladder Diagram, and Function Block Diagram using CoDeSys and Indraworks — writing clean, maintainable control logic.</li>
+            <li>Built real-time data acquisition pipelines with Node-RED, MQTT broker (Mosquitto), and OPC UA (UA Expert), gaining hands-on experience with event-driven architecture and machine-to-cloud data flow.</li>
+            <li>Integrated Factory IO simulations with live PLC controllers for hardware-in-the-loop (HIL) testing of automated assembly-line logic, reducing debugging cycles.</li>
+            <li>Worked with motion control systems, servo drive configuration, and fieldbus protocols (CAN, Profibus) used in precision manufacturing.</li>
+            <li>Documented automation workflows and test reports evaluating system latency, cycle time, and fault-recovery performance.</li>
+          </ul></div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-head"><div><div class="t-org">Aptifyr</div><div class="t-role">Content Strategist &amp; Technical Researcher · Vellore</div></div><div style="display:flex;align-items:center;gap:12px;"><div class="t-date">Apr – Jun 2025</div><span class="t-chev">›</span></div></div>
+          <div class="t-body"><ul>
+            <li>Created research-driven content strategies spanning semiconductor trends, embedded systems innovation, AI/ML, and software engineering best practices, driving measurable engagement and follower growth.</li>
+            <li>Distilled complex technical concepts into structured, accessible publications, collaborating cross-functionally with product and design teams in an Agile-style iterative workflow.</li>
+          </ul></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SKILLS ================= -->
+<section id="skills">
+  <div class="wrap reveal">
+    <div class="section-head">
+      <div>
+        <div class="section-tag">// 03 — Capability</div>
+        <h2 class="section-title">Skills &amp; Tools</h2>
+      </div>
+      <p class="section-note" id="skillsNote">Highlighted chips shift with the HW / SW switch above.</p>
+    </div>
+    <div class="skill-groups">
+
+      <div class="skill-card">
+        <h4 data-mark="HW">Silicon &amp; RTL</h4>
+        <div class="chip-row" data-domain="hw">
+          <span class="chip">Verilog</span><span class="chip">SystemVerilog</span><span class="chip">VHDL</span>
+          <span class="chip">Static Timing Analysis</span><span class="chip">FPGA Prototyping</span><span class="chip">ASIC Design Flow</span>
+          <span class="chip">Cadence Virtuoso</span><span class="chip">Intel Quartus Prime</span><span class="chip">ModelSim</span>
+          <span class="chip">Analog &amp; Mixed-Signal</span><span class="chip">Semiconductor Device Physics</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <h4 data-mark="HW">Embedded, IoT &amp; RF</h4>
+        <div class="chip-row" data-domain="hw">
+          <span class="chip">ESP32 / Arduino / ARM</span><span class="chip">Embedded C</span><span class="chip">RTOS Concepts</span>
+          <span class="chip">LoRa (SX1278)</span><span class="chip">ESP-NOW</span><span class="chip">BLE / Wi-Fi</span>
+          <span class="chip">Ansys HFSS</span><span class="chip">CST Microwave Studio</span><span class="chip">Antenna &amp; Link Budget</span>
+          <span class="chip">KiCad PCB Design</span><span class="chip">PLC (CoDeSys, Indraworks)</span><span class="chip">MQTT / Node-RED</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <h4 data-mark="SW">Full-Stack &amp; Backend</h4>
+        <div class="chip-row" data-domain="sw">
+          <span class="chip">Python</span><span class="chip">Java</span><span class="chip">C++ / C</span><span class="chip">JavaScript</span>
+          <span class="chip">Flask &amp; Jinja2</span><span class="chip">REST API Design</span><span class="chip">JWT Auth</span>
+          <span class="chip">SQL / SQLite / PostgreSQL</span><span class="chip">Bootstrap</span><span class="chip">Git / GitHub</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <h4 data-mark="SW">AI, ML &amp; Data</h4>
+        <div class="chip-row" data-domain="sw">
+          <span class="chip">NLP</span><span class="chip">SBERT</span><span class="chip">FAISS</span><span class="chip">Scikit-learn</span>
+          <span class="chip">NumPy / Pandas</span><span class="chip">LSTM / Deep Learning</span><span class="chip">Vector Embeddings</span>
+          <span class="chip">Semantic Search</span><span class="chip">Power BI</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <h4 data-mark="SW">Mobile &amp; Web</h4>
+        <div class="chip-row" data-domain="sw">
+          <span class="chip">Flutter / Dart</span><span class="chip">Android Studio</span><span class="chip">HTML / CSS</span>
+          <span class="chip">AJAX / JSON</span><span class="chip">Responsive Design</span><span class="chip">Figma</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <h4 data-mark="//">Method &amp; Practice</h4>
+        <div class="chip-row">
+          <span class="chip">Data Structures &amp; Algorithms</span><span class="chip">OOP</span><span class="chip">SDLC</span>
+          <span class="chip">Agile / Scrum</span><span class="chip">System Design Fundamentals</span><span class="chip">Technical Documentation</span>
+          <span class="chip">Linux (Ubuntu)</span><span class="chip">MATLAB</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROJECTS ================= -->
+<section id="projects">
+  <div class="wrap reveal">
+    <div class="section-head">
+      <div>
+        <div class="section-tag">// 04 — Build Log</div>
+        <h2 class="section-title">Projects</h2>
+      </div>
+      <p class="section-note">Eleven end-to-end builds, from RTL to REST APIs.</p>
+    </div>
+
+    <div class="filter-row">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="embedded">Embedded &amp; Robotics</button>
+      <button class="filter-btn" data-filter="ai">Full-Stack &amp; AI</button>
+      <button class="filter-btn" data-filter="mobile">Mobile</button>
+      <button class="filter-btn" data-filter="vlsi">VLSI &amp; Algorithms</button>
+    </div>
+
+    <div class="proj-grid" id="projGrid">
+
+      <div class="proj-card" data-cat="ai">
+        <div class="proj-top"><div class="proj-title">AI Resume Analyser &amp; Job Matcher</div><div class="proj-year">2025</div></div>
+        <div class="proj-stack">Python · Flask · SBERT · FAISS · NLP · HTML/CSS/JS</div>
+        <div class="proj-desc"><ul>
+          <li>End-to-end web app that parses resumes (PDF/DOCX), extracts skills and candidate profiles via NLP, and performs semantic job matching using SBERT embeddings and FAISS vector search.</li>
+          <li>ATS-style scoring engine surfaces matched/missing skills and concrete upskilling suggestions through REST API endpoints and a responsive front end.</li>
+        </ul></div>
+        <div class="proj-tags"><span>Full-Stack</span><span>Applied ML</span><span>REST API</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="vlsi">
+        <div class="proj-top"><div class="proj-title">Static Timing Analysis (STA) Engine</div><div class="proj-year">2025</div></div>
+        <div class="proj-stack">Python · Verilog · Graph Theory · Cadence Concepts</div>
+        <div class="proj-desc"><ul>
+          <li>Built a complete STA engine from scratch, parsing gate-level Verilog netlists and Liberty (.lib) timing files into directed acyclic graph models of logic networks.</li>
+          <li>Topological sorting propagates arrival times, required arrival times, and slack to pinpoint critical paths and timing violations, visualised through interactive graph plots.</li>
+        </ul></div>
+        <div class="proj-tags"><span>DSA</span><span>Graph Algorithms</span><span>Physical Design</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="vlsi">
+        <div class="proj-top"><div class="proj-title">RISC-V Multi-Stage Pipelined System</div><div class="proj-year">2026</div></div>
+        <div class="proj-stack">Verilog · Python · Computer Architecture</div>
+        <div class="proj-desc"><ul>
+          <li>Built a complete RISC-V processor from scratch, starting with a custom Python assembler and implementing the full ISA in Verilog.</li>
+          <li>Designed multi-stage pipelines with ALU, memory, single-cycle and multi-cycle execution, cache integration, and optimization techniques.</li>
+          <li>Incorporated hazard detection, forwarding, and control logic to ensure efficient and correct instruction execution.</li>
+        </ul></div>
+        <div class="proj-tags"><span>RISC-V ISA</span><span>Pipelining</span><span>Hardware Simulation</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="embedded">
+        <div class="proj-top"><div class="proj-title">Hand-Gesture Controlled Robotic Vehicle</div><div class="proj-year">2025</div></div>
+        <div class="proj-stack">ESP32 · Accelerometer · ESP-NOW · Embedded C</div>
+        <div class="proj-desc"><ul>
+          <li>Wireless robotic vehicle driven by 3-axis accelerometer gestures, with sub-5ms round-trip latency over the ESP-NOW peer-to-peer protocol between two ESP32 modules.</li>
+          <li>Custom L298N H-bridge motor driver circuitry and PWM firmware for smooth gesture-to-motion mapping, with potential application in assistive mobility and telepresence robots.</li>
+        </ul></div>
+        <div class="proj-tags"><span>IoT</span><span>Firmware</span><span>Wireless</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="embedded">
+        <div class="proj-top"><div class="proj-title">LoRa-Based Long-Range Audio Communication</div><div class="proj-year">2025</div></div>
+        <div class="proj-stack">ESP32 · LoRa (SX1278) · RTOS · C/C++</div>
+        <div class="proj-desc"><ul>
+          <li>Voice communication link over 915 MHz LoRa, capturing audio via I2S microphone with real-time PCM encoding, packetization, and radio transmission for remote playback (~2km line-of-sight).</li>
+          <li>Solved bandwidth-constrained audio compression, adaptive packet-loss handling (ARQ/FEC), and latency optimisation — applicable to disaster-response and rural connectivity scenarios.</li>
+        </ul></div>
+        <div class="proj-tags"><span>RF</span><span>Signal Processing</span><span>Firmware</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="embedded">
+        <div class="proj-top"><div class="proj-title">PID Cruise Control Robot with Obstacle Avoidance</div><div class="proj-year">2025</div></div>
+        <div class="proj-stack">Arduino · PID Control · Ultrasonic Sensors · PWM</div>
+        <div class="proj-desc"><ul>
+          <li>Closed-loop PID speed controller tuned to hold steady-state accuracy within ±3% of setpoint, mirroring automotive adaptive cruise control.</li>
+          <li>Integrated real-time ultrasonic obstacle detection with the control loop for automatic deceleration, documenting rise time, settling time, and overshoot metrics.</li>
+        </ul></div>
+        <div class="proj-tags"><span>Control Systems</span><span>Robotics</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="embedded">
+        <div class="proj-top"><div class="proj-title">Cloud-Connected Agricultural IoT Dashboard</div><div class="proj-year">2025</div></div>
+        <div class="proj-stack">ESP32 · MQTT · Node-RED · Cloud Backend · HTML/CSS/JS</div>
+        <div class="proj-desc"><ul>
+          <li>Multi-node sensor network streaming soil moisture, temperature, and humidity to a cloud backend via MQTT and Node-RED for real-time precision agriculture monitoring.</li>
+          <li>Responsive dashboard with historical trend graphs, configurable threshold alerts, and OTA firmware updates for scalable field deployment.</li>
+        </ul></div>
+        <div class="proj-tags"><span>IoT</span><span>Cloud</span><span>Dashboard</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="embedded">
+        <div class="proj-top"><div class="proj-title">Autonomous Obstacle-Avoiding Robot</div><div class="proj-year">2024</div></div>
+        <div class="proj-stack">Arduino · Ultrasonic Sensing · L298N Motor Driver</div>
+        <div class="proj-desc"><ul>
+          <li>Fully autonomous navigation robot with real-time ultrasonic obstacle detection and dynamic path correction for reliable movement in unstructured environments.</li>
+          <li>Finite state machine logic governs move, stop, turn, and reverse manoeuvres as a practical foundation in autonomous systems design.</li>
+        </ul></div>
+        <div class="proj-tags"><span>Robotics</span><span>FSM</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="ai">
+        <div class="proj-top"><div class="proj-title">Vehicle Parking Management System</div><div class="proj-year">2024</div></div>
+        <div class="proj-stack">Flask · SQLite · JWT · Bootstrap · Jinja2 · REST API</div>
+        <div class="proj-desc"><ul>
+          <li>Production-quality full-stack app with role-based JWT authentication, real-time spot availability, and automated session-duration billing.</li>
+          <li>RESTful endpoints for reservation, release, and billing follow proper HTTP conventions, request validation, and error handling.</li>
+        </ul></div>
+        <div class="proj-tags"><span>Full-Stack</span><span>Auth</span><span>REST API</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="mobile">
+        <div class="proj-top"><div class="proj-title">Habit Tracker Mobile Application</div><div class="proj-year">2024</div></div>
+        <div class="proj-stack">Flutter · Dart · Android Studio</div>
+        <div class="proj-desc"><ul>
+          <li>Cross-platform mobile app with habit creation, editing, streak tracking, category organisation, and persistent local storage.</li>
+          <li>Built and deployed via Android Studio following mobile SDLC practices — state management, lifecycle handling, and UI/UX design.</li>
+        </ul></div>
+        <div class="proj-tags"><span>Cross-Platform</span><span>Mobile UI</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="ai">
+        <div class="proj-top"><div class="proj-title">Custom-Built LLM for Research Paper Scoring</div><div class="proj-year">2025</div></div>
+        <div class="proj-stack">Python · Flask · Character-Level LSTM · Deep Learning</div>
+        <div class="proj-desc"><ul>
+          <li>Character-level LSTM language model trained on large-scale arXiv abstracts and titles to learn the patterns of formal academic writing.</li>
+          <li>Perplexity-based scoring mechanism quantifies how closely input text aligns with scholarly writing standards, served through a Flask backend.</li>
+        </ul></div>
+        <div class="proj-tags"><span>NLP</span><span>Deep Learning</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="embedded">
+        <div class="proj-top"><div class="proj-title">Home Automation via Bluetooth</div><div class="proj-year">2024</div></div>
+        <div class="proj-stack">Arduino Uno · HC-05 · Android App · Embedded C</div>
+        <div class="proj-desc"><ul>
+          <li>Bluetooth-controlled home automation system enabling wireless switching of lights, appliances, and fan speed via a custom Android app.</li>
+          <li>Relevant to low-connectivity embedded control scenarios where cloud dependence isn't practical.</li>
+        </ul></div>
+        <div class="proj-tags"><span>Embedded</span><span>Bluetooth</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= CERTIFICATIONS ================= -->
+<section id="certifications">
+  <div class="wrap reveal">
+    <div class="section-head">
+      <div>
+        <div class="section-tag">// 05 — Continuous Learning</div>
+        <h2 class="section-title">Certifications &amp; Training</h2>
+      </div>
+      <p class="section-note">Grouped by discipline — expand to see each one.</p>
+    </div>
+
+    <div class="accordion">
+
+      <div class="accordion-item">
+        <div class="acc-head"><h4>VLSI &amp; Semiconductor</h4><div style="display:flex;align-items:center;"><span class="acc-count">6 credentials</span><span class="acc-chev">+</span></div></div>
+        <div class="acc-body">
+          <ul class="cert-grid">
+            <li><b>VLSI System on a Chip</b> — Maven Silicon</li>
+            <li><b>Physical Design Foundation</b> — Maven Silicon</li>
+            <li><b>Verilog HDL – Hands-On</b> — Maven Silicon</li>
+            <li><b>Embedded System Design Overview</b> — Maven Silicon</li>
+            <li><b>Introduction to Semiconductor Manufacturing</b> — Udemy</li>
+            <li><b>Master COMSOL Multiphysics Simulation Software</b> — Udemy</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="acc-head"><h4>Embedded Systems &amp; Hardware</h4><div style="display:flex;align-items:center;"><span class="acc-count">7 credentials</span><span class="acc-chev">+</span></div></div>
+        <div class="acc-body">
+          <ul class="cert-grid">
+            <li><b>Embedded Programming for Sensor Systems</b> (VAC) — VIT Vellore</li>
+            <li><b>Electromagnetic Interference &amp; Compatibility</b> (VAC) — VIT Vellore</li>
+            <li><b>PLC Programming – Learn the Basics with CoDeSys</b> — Udemy</li>
+            <li><b>Internship on PCB Design</b> — Pantech Solutions</li>
+            <li><b>Basic MATLAB Programming</b> — Udemy</li>
+            <li><b>Introductory Drone Workshop</b> — India Space Labs</li>
+            <li><b>Robotics and Controls Job Simulation</b> — Forage</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="acc-head"><h4>Data Science, AI &amp; Cloud</h4><div style="display:flex;align-items:center;"><span class="acc-count">15 credentials</span><span class="acc-chev">+</span></div></div>
+        <div class="acc-body">
+          <ul class="cert-grid">
+            <li><b>Python Essentials</b> — Cisco Networking Academy</li>
+            <li><b>Introduction to Data Science</b> — Cisco Networking Academy</li>
+            <li><b>Introduction to Cybersecurity</b> — Cisco Networking Academy</li>
+            <li><b>PostgreSQL – Become an SQL Developer</b> — Udemy</li>
+            <li><b>Generative AI for Beginners</b> — Udemy</li>
+            <li><b>Generative AI Mastermind</b></li>
+            <li><b>Gen AI by BCG X</b> — Forage / BCG</li>
+            <li><b>Cybersecurity Analyst Job Simulation</b> — Forage / Tata</li>
+            <li><b>Quantum Computing</b> (1-Month Intensive) — C-DAC</li>
+            <li><b>AI for Beginners</b> — HP</li>
+            <li><b>30 Days Power BI</b></li>
+            <li><b>Getting Started with Figma</b> — Coursera</li>
+            <li><b>Introduction to Microsoft Excel</b> — Coursera</li>
+            <li><b>IT Audit – Beginner to Job Ready</b> — Udemy</li>
+            <li><b>Customer Experience</b> — HP</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= LEADERSHIP + ACHIEVEMENTS ================= -->
+<section id="leadership">
+  <div class="wrap reveal">
+    <div class="section-head">
+      <div>
+        <div class="section-tag">// 06 — Beyond the Lab</div>
+        <h2 class="section-title">Leadership &amp; Achievements</h2>
+      </div>
+    </div>
+
+    <div class="lead-grid">
+      <div>
+        <div class="lead-card">
+          <div class="t-org">Team Assailing Falcons — SAE Aero Design (India)</div>
+          <span class="t-role">Management Core Member · VIT Vellore · Apr 2024 – Jan 2025</span>
+          <p>Spearheaded sponsorship acquisition, corporate outreach, and public relations for a competitive aerospace design team, producing high-fidelity CAD renders and promotional material in Figma, Illustrator, and Blender to communicate engineering designs to non-technical stakeholders.</p>
+        </div>
+        <div class="lead-card">
+          <div class="t-org">25th World Scout Jamboree, South Korea</div>
+          <span class="t-role">Contingent Management &amp; Media Team Member · Jul 2023</span>
+          <p>Selected as the youngest Contingent Management Team member from India (age 18) to represent the nation among ~50,000 participants from 160+ countries — managing cross-cultural coordination, live event coverage, and multilingual content creation.</p>
+        </div>
+        <div class="lead-card">
+          <div class="t-org">Scouting Waves (e-Newsletter, Bharat Scouts &amp; Guides)</div>
+          <span class="t-role">Content Head &amp; Editor · Remote · Jun 2020 – Jul 2022</span>
+          <p>Led editorial operations for a national e-newsletter through the pandemic, overseeing 400+ publications and a distributed writing team while maintaining editorial quality across weekly editions.</p>
+        </div>
+      </div>
+
+      <div>
+        <ul class="achv-list">
+          <li><span class="achv-mark">01</span><p><b>ISWDP Samsung Student Fellowship</b> — competitive fellowship recognising academic excellence and innovation in electronics &amp; technology.</p></li>
+          <li><span class="achv-mark">02</span><p><b>Exchange Student, UCF Orlando</b> — selected for international academic exchange, Spring 2026.</p></li>
+          <li><span class="achv-mark">03</span><p><b>Star of the Year, 2022–2023</b> — Sadhana PU College, for outstanding academic performance and holistic excellence.</p></li>
+          <li><span class="achv-mark">04</span><p><b>JEE Advanced Qualified</b> — top ~2% of 1.2M+ candidates nationwide.</p></li>
+          <li><span class="achv-mark">05</span><p><b>JEE Mains: 97.29 Percentile</b> — NTA JEE 2023.</p></li>
+          <li><span class="achv-mark">06</span><p><b>Youngest CMT Member from India</b> — 25th World Scout Jamboree, South Korea.</p></li>
+          <li><span class="achv-mark">07</span><p><b>Class X ICSE Board: 99.2%</b> — Swargarani School, among the highest scores in the examination.</p></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT / FOOTER ================= -->
+<footer id="contact">
+  <div class="wrap">
+    <div class="contact-grid">
+      <h2>Let's build something that bridges hardware and software.</h2>
+      <div class="contact-links">
+        <a href="mailto:amulya1471@gmail.com" id="emailLink">amulya1471@gmail.com</a>
+        <a href="tel:+919902512377">+91 99025 12377</a>
+        <a href="https://www.linkedin.com/in/amulya-bhat-1151a228b/" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a href="https://github.com/Amulyabhat2023" target="_blank" rel="noopener">GitHub ↗</a>
+        <a href="https://amulyabhat2023.github.io/" target="_blank" rel="noopener">Existing Portfolio ↗</a>
+      </div>
+    </div>
+    <div class="lang-row">
+      <span>LANGUAGES —</span>
+      <span><b>English</b> (Full Professional)</span>
+      <span><b>Hindi</b> (Native)</span>
+      <span><b>Kannada</b> (Native)</span>
+    </div>
+    <div class="copyright">
+      <span>© 2026 Amulya Bhat</span>
+      <span id="modeFooterTag" class="mono">MODE: HARDWARE</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast">Email copied to clipboard</div>
+
+<script>
+(function(){
+  /* ---------- Hero background schematic / grid motif ---------- */
+  var heroBg = document.getElementById('heroBg');
+  function drawHW(){
+    var s = '';
+    for (var i=0;i<7;i++){
+      var y = 40 + i*70;
+      s += '<path d="M -20 '+y+' H 300" fill="none" stroke="rgba(237,234,224,0.10)" stroke-width="1"/>';
+      s += '<circle cx="300" cy="'+y+'" r="3" fill="rgba(168,62,69,0.55)"/>';
+      s += '<path d="M 300 '+y+' V '+(y+35)+' H 460" fill="none" stroke="rgba(237,234,224,0.10)" stroke-width="1"/>';
+      s += '<circle cx="460" cy="'+(y+35)+'" r="3" fill="rgba(168,62,69,0.35)"/>';
+    }
+    for (var j=0;j<10;j++){
+      s += '<circle cx="'+(600+j*48)+'" cy="'+(60+((j%3)*140))+'" r="2" fill="rgba(237,234,224,0.18)"/>';
+    }
+    return s;
+  }
+  function drawSW(){
+    var s='';
+    var cw=28, ch=24;
+    for (var x=0;x<1120;x+=cw){
+      s += '<line x1="'+x+'" y1="0" x2="'+x+'" y2="520" stroke="rgba(91,133,184,0.07)" stroke-width="1"/>';
+    }
+    for (var y=0;y<520;y+=ch){
+      s += '<line x1="0" y1="'+y+'" x2="1120" y2="'+y+'" stroke="rgba(91,133,184,0.06)" stroke-width="1"/>';
+    }
+    s += '<text x="640" y="90" fill="rgba(91,133,184,0.42)" font-family="IBM Plex Mono, monospace" font-size="14">&lt;/&gt; while(building) &#123; ship(); &#125;</text>';
+    s += '<text x="640" y="130" fill="rgba(91,133,184,0.28)" font-family="IBM Plex Mono, monospace" font-size="14">const engineer = &#123; hw: true, sw: true &#125;;</text>';
+    return s;
+  }
+  heroBg.innerHTML = drawHW();
+
+  /* ---------- Mode switch (signature interaction) ---------- */
+  var modeSwitch = document.getElementById('modeSwitch');
+  var lblHW = document.getElementById('lblHW');
+  var lblSW = document.getElementById('lblSW');
+  var caption = document.getElementById('switchCaption');
+  var footerTag = document.getElementById('modeFooterTag');
+  var root = document.documentElement;
+  var isSW = false;
+
+  function applyMode(){
+    if (isSW){
+      root.style.setProperty('--accent','var(--teal)');
+      root.style.setProperty('--accent-soft','var(--teal-soft)');
+      modeSwitch.classList.add('sw');
+      lblHW.classList.remove('active'); lblSW.classList.add('active');
+      caption.textContent = "Software mode: full-stack, AI/ML and mobile skills & projects surface first.";
+      footerTag.textContent = 'MODE: SOFTWARE';
+      heroBg.innerHTML = drawSW();
+    } else {
+      root.style.setProperty('--accent','var(--brass)');
+      root.style.setProperty('--accent-soft','var(--brass-soft)');
+      modeSwitch.classList.remove('sw');
+      lblSW.classList.remove('active'); lblHW.classList.add('active');
+      caption.textContent = "Toggling re-sorts skills & recolors the page to match each discipline — because the work genuinely lives in both.";
+      footerTag.textContent = 'MODE: HARDWARE';
+      heroBg.innerHTML = drawHW();
+    }
+    document.querySelectorAll('.chip').forEach(function(chip){
+      var row = chip.closest('.chip-row');
+      if(!row) return;
+      var domain = row.getAttribute('data-domain');
+      if (!domain) { chip.classList.remove('priority'); return; }
+      var match = (isSW && domain === 'sw') || (!isSW && domain === 'hw');
+      chip.classList.toggle('priority', match);
+    });
+  }
+  lblHW.classList.add('active');
+  modeSwitch.addEventListener('click', function(){ isSW = !isSW; applyMode(); });
+  modeSwitch.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); isSW = !isSW; applyMode(); }
+  });
+  applyMode();
+
+  /* ---------- Tabs: Education / Experience ---------- */
+  document.querySelectorAll('.tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+      document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById(btn.getAttribute('data-tab')).classList.add('active');
+    });
+  });
+
+  /* ---------- Timeline expand ---------- */
+  document.querySelectorAll('.t-head').forEach(function(head){
+    head.addEventListener('click', function(){
+      var body = head.nextElementSibling;
+      var open = body.classList.contains('open');
+      body.classList.toggle('open', !open);
+      head.classList.toggle('open', !open);
+    });
+  });
+  // open first item of each timeline by default
+  document.querySelectorAll('.timeline').forEach(function(tl){
+    var firstHead = tl.querySelector('.t-head');
+    if (firstHead){ firstHead.click(); }
+  });
+
+  /* ---------- Project filter ---------- */
+  document.querySelectorAll('.filter-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var f = btn.getAttribute('data-filter');
+      document.querySelectorAll('.proj-card').forEach(function(card){
+        var cat = card.getAttribute('data-cat');
+        card.classList.toggle('hide', f !== 'all' && f !== cat);
+      });
+    });
+  });
+
+  /* ---------- Certifications accordion ---------- */
+  document.querySelectorAll('.acc-head').forEach(function(head){
+    head.addEventListener('click', function(){
+      var body = head.nextElementSibling;
+      var open = body.classList.contains('open');
+      document.querySelectorAll('.acc-body').forEach(function(b){ b.classList.remove('open'); });
+      document.querySelectorAll('.acc-head').forEach(function(h){ h.classList.remove('open'); });
+      if (!open){ body.classList.add('open'); head.classList.add('open'); }
+    });
+  });
+
+  /* ---------- Scroll reveal ---------- */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  /* ---------- Nav active-section highlight ---------- */
+  var navLinks = document.querySelectorAll('.nav-links a');
+  var sections = Array.prototype.map.call(navLinks, function(a){ return document.querySelector(a.getAttribute('href')); });
+  window.addEventListener('scroll', function(){
+    var pos = window.scrollY + 100;
+    var current = 0;
+    sections.forEach(function(sec, i){ if (sec && sec.offsetTop <= pos) current = i; });
+    navLinks.forEach(function(a,i){ a.classList.toggle('active', i===current); });
+  });
+
+  /* ---------- Copy email ---------- */
+  var emailLink = document.getElementById('emailLink');
+  var toast = document.getElementById('toast');
+  emailLink.addEventListener('click', function(e){
+    e.preventDefault();
+    var email = 'amulya1471@gmail.com';
+    if (navigator.clipboard){
+      navigator.clipboard.writeText(email).then(showToast);
+    } else {
+      window.location.href = 'mailto:'+email;
+    }
+  });
+  function showToast(){
+    toast.classList.add('show');
+    setTimeout(function(){ toast.classList.remove('show'); }, 2200);
+  }
+})();
+</script>
 </body>
 </html>
